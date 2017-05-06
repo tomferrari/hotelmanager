@@ -11,25 +11,26 @@ package hotelmanager;
  */
 public class Client {
     
-    private int id;
+    private int idClient;
     private String nomClient;
     private String prenomClient;
     private String emailClient;
     private int telClient;
     
-    
-    public Client (int id, String nomClient, String prenomClient, String emailClient, int telClient)
+    //Constructeur
+    public Client (int idClient, String nomClient, String prenomClient, String emailClient, int telClient)
     {
-        this.id = id;
+        this.idClient = idClient;
         this.nomClient = nomClient;
         this.prenomClient = prenomClient;
         this.emailClient = emailClient;
         this.telClient = telClient;
     }
     
-    public int getId()
+    //Getters
+    public int getIdClient()
     {
-        return id;
+        return idClient;
     }
     
     public String getNomClient()
@@ -52,5 +53,31 @@ public class Client {
         return telClient;
     }
     
+    
+    //Setters
+    public void setIdClient(int idClient)
+    {
+      this.idClient = idClient;
+    }
+    
+    public void setNomClient(String nomClient)
+    {
+      this.nomClient = nomClient;
+    }
+    
+    public void setPrenomClient(String prenomClient)
+    {
+      this.prenomClient = prenomClient;
+    }
+    
+    public void setEmailClient(String emailClient)
+    {
+      this.emailClient = emailClient;
+    }
+    
+    public void setTelClient(int telClient)
+    {
+      this.telClient = telClient;
+    }
     
 }
