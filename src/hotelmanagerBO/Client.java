@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotelmanager;
+package hotelmanagerBO;
 
 /**
  *
@@ -25,6 +25,19 @@ public class Client {
         this.prenomClient = prenomClient;
         this.emailClient = emailClient;
         this.telClient = telClient;
+    }
+    
+    public Client (String nomClient, String prenomClient, String emailClient, int telClient)
+    {
+        this.nomClient = nomClient;
+        this.prenomClient = prenomClient;
+        this.emailClient = emailClient;
+        this.telClient = telClient;
+    }
+    
+    public Client (int idClient)
+    {
+        this.idClient = idClient;
     }
     
     //Getters
@@ -79,5 +92,7 @@ public class Client {
     {
       this.telClient = telClient;
     }
+    
+    
     
 }
