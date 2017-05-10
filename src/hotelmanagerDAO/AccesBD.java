@@ -15,7 +15,7 @@ import java.sql.Statement;
  *
  * @author Thomas
  */
-public class AccessBD {
+public class AccesBD {
     
         private SqlConnection maConnexion;
         private static AccesBD uneConnexionBD;

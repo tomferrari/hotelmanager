@@ -6,7 +6,7 @@
 package hotelmanagerBLL;
 import  hotelmanagerBO.Client;
 import hotelmanagerDAO.ClientDAO;
-import hotelmanagerDAO.AccessBD;
+import hotelmanagerDAO.AccesBD;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;

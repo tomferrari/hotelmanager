@@ -27,6 +27,19 @@ public class Chambre {
         this.prixChambre = prixChambre;
     }
     
+    public Chambre (int etageChambre, int numeroChambre,int nbLitChambre,int prixChambre)
+    {
+        this.etageChambre = etageChambre;
+        this.numeroChambre = numeroChambre;
+        this.nbLitChambre = nbLitChambre;
+        this.prixChambre = prixChambre;
+    }
+    
+    public Chambre (int idChambre)
+    {
+        this.idChambre = idChambre;
+    }
+    
     //Getters
     public int getIdChambre()
     {
