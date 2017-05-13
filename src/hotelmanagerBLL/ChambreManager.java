@@ -7,12 +7,8 @@ package hotelmanagerBLL;
 import  hotelmanagerBO.Chambre;
 import hotelmanagerDAO.ChambreDAO;
 import hotelmanagerDAO.AccesBD;
-import java.util.List;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.*;
+import java.sql.*;
 
 /**
  *

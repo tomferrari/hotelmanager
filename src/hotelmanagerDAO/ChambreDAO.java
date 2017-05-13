@@ -6,12 +6,10 @@
 package hotelmanagerDAO;
 import  hotelmanagerBO.Chambre;
 import hotelmanagerDAO.ChambreDAO;
-import java.util.List;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.*;
+import java.math.*;
+import java.util.*;
+import java.sql.*;
 
 /**
  *
@@ -58,8 +56,9 @@ public class ChambreDAO {
             nbLitChambre = Convert.monReader["NB_LIT_CHAMBRE"].ToString();
             prixChambre = Convert.ToInt32(monReader["PRIX_CHAMBRE"].ToString());
 
-            uneChambre = new Chambre(Convert.ToInt32(idClient), Convert.ToInt32(etageChambre), Convert.ToInt32(numeroChambre), Convert.ToInt32(nbLitChambre), Convert.ToInt32(prixChambre));
-            lesChambres.Add(uneChambre);
+            uneChambre = new Chambre(Convert.ToInt32(idChambre), Convert.ToInt32(etageChambre), Convert.ToInt32(numeroChambre), Convert.ToInt32(nbLitChambre), Convert.ToInt32(prixChambre));
+            lesChambres.add(uneChambre);
+    
         }
         maConnexion.Close();
 
@@ -70,14 +69,14 @@ public class ChambreDAO {
     {
         int nbEnr;
 
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
+        Connection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
 
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = maConnexion;
         cmd.CommandText = "INSERT INTO CHAMBRE VALUES ('" + uneChambre.getEtageChambre() + "','" + uneChambre.getNumeroChambre() + "','" + uneChambre.getNbLitChambre() + "','" + uneChambre.getPrixChambre() + "')";
 
         nbEnr = cmd.ExecuteNonQuery();
-        maConnexion.Close();
+        maConnexion.close();
         return nbEnr;
     }
     

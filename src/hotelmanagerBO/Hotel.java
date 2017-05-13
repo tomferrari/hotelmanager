@@ -25,6 +25,18 @@ public class Hotel {
         this.nbChambreHotel = nbChambreHotel;
     }
     
+    public Hotel (String nomHotel, String adresseHotel, int nbChambreHotel)
+    {
+        this.nomHotel = nomHotel;
+        this.adresseHotel = adresseHotel;
+        this.nbChambreHotel = nbChambreHotel;
+    }
+    
+    public Hotel (int idHotel)
+    {
+        this.idHotel = idHotel;
+    }
+    
     //Getters
     public int getIdHotel()
     {

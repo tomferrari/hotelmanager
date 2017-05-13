@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 package hotelmanagerDAO;
-import  hotelmanagerBO.Client;
-import hotelmanagerBLL.ClientManager;
+import  hotelmanagerBO.Hotel;
+import hotelmanagerBLL.HotelManager;
 import java.*;
 import java.math.*;
 import java.util.*;
@@ -15,59 +15,57 @@ import java.sql.*;
  *
  * @author Thomas
  */
-public class ClientDAO {
+public class HotelDAO {
     
-    private static ClientDAO unClientDAO;
+    private static HotelDAO unHotelDAO;
 
-    public static ClientDAO GetunClientDAO()
+    public static HotelDAO GetunHotelDAO()
     {
-        if (unClientDAO == null)
+        if (unHotelDAO == null)
         {
-            unClientDAO = new ClientDAO();
+            unHotelDAO = new HotelDAO();
         }
-        return unClientDAO;
+        return unHotelDAO;
     }
 
-    public static List<Client> GetClient()
+    public static List<Hotel> GetHotel()
     {
-        int idClient;
-        String nomClient;
-        String prenomClient;
-        String emailClient;
-        int telClient;
+        int idHotel;
+        String nomHotel;
+        String adresseHotel;
+        int nbChambreHotel;
 
-        Client unClient;
+        Hotel unHotel;
 
         SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
 
-        List<Client> lesClients = new List<Client>();
+        List<Hotel> lesHotels = new List<Hotel>();
 
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = maConnexion;
-        cmd.CommandText = "SELECT * FROM CLIENT";
+        cmd.CommandText = "SELECT * FROM HOTEL";
 
         SqlDataReader monReader = cmd.ExecuteReader();
 
         while (monReader.Read())
         {
-            idClient = Convert.ToInt32(monReader["ID_CLIENT"].ToString());
-            nomClient = monReader["NOM_CLIENT"].ToString();
-            prenomClient = Convert.ToInt32(monReader["PRENOM_CLIENT"].ToString());
-            emailClient = monReader["EMAIL_CLIENT"].ToString();
-            telClient = Convert.ToInt32(monReader["TEL_CLIENT"].ToString());
+            idHotel = Convert.ToInt32(monReader["ID_HOTEL"].ToString());
+            nomHotel = monReader["NOM_HOTEL"].ToString();
+            adresseHotel = Convert.ToInt32(monReader["ADRESSE_HOTEL"].ToString());
+            nbChambreHotel = Convert.ToInt32(monReader["NB_CHAMBRE_HOTEL"].ToString());
 
 
             //proprietaire = new PROPRIETAIRE(Convert.ToInt32(proprietaire.ID), proprietaire.NOM);
             //entraineur = new ENTRAINEUR(Convert.ToInt32(entraineur.ID), entraineur.NOM);
-            unClient = new Client(Convert.ToInt32(idClient), nomClient, prenomClient, emailClient, Convert.ToInt32(telClient));
-            lesClients.add(unClient);
+            unHotel = new Hotel(Convert.ToInt32(idHotel), nomHotel, adresseHotel, Convert.ToInt32(nbChambreHotel));
+            lesHotels.add(unHotel);
         }
         maConnexion.Close();
 
-        return lesClients;
+        return lesHotels;
     }
 
-    public static int EnregistrerClient(Client unClient)
+    public static int EnregistrerHotel(Hotel unHotel)
     {
         int nbEnr;
 
@@ -75,14 +73,14 @@ public class ClientDAO {
 
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = maConnexion;
-        cmd.CommandText = "INSERT INTO CLIENT VALUES ('" + unClient.getNomClient() + "','" + unClient.getPrenomClient() + "','" + unClient.getEmailClient() + "','" + unClient.getTelClient() + "')";
+        cmd.CommandText = "INSERT INTO HOTEL VALUES ('" + unHotel.getNomHotel()+ "','" + unHotel.getAdresseHotel()+ "','" + unHotel.getNbChambreHotel() + "')";
 
         nbEnr = cmd.ExecuteNonQuery();
         maConnexion.Close();
         return nbEnr;
     }
 
-    public int SupprimerClient(Client unClient)
+    public int SupprimerHotel(Hotel unHotel)
     {
         int nbEnregSup;
         // on récupère l'objet responsable de la connexion à la base
@@ -91,7 +89,7 @@ public class ClientDAO {
         // on crée l'objet qui va contenir la requête SQL qui sera exécutée
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = maConnexion;
-        cmd.CommandText = "DELETE FROM CLIENT WHERE ID_CLIENT =" + unClient.getIdClient();
+        cmd.CommandText = "DELETE FROM HOTEL WHERE ID_HOTEL =" + unHotel.getIdHotel();
 
         // on exécute la requête
         nbEnregSup = cmd.ExecuteNonQuery();
@@ -99,7 +97,7 @@ public class ClientDAO {
         return nbEnregSup;
     }
 
-    public int ModifierClient(Client unClient)
+    public int ModifierHotel(Hotel unHotel)
     {
         int nbEnregAjout;
         // on récupère l'objet responsable de la connexion à la base
@@ -109,9 +107,9 @@ public class ClientDAO {
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = maConnexion;
 
-        cmd.CommandText = "UPDATE CLIENT SET NOM_CLIENT = '" + unClient.getNomClient() + "', PRENOM_CLIENT='" +
-                unClient.getPrenomClient() + "',EMAIL_CLIENT ='" + unClient.getEmailClient() + "',TEL_CLIENT='" + unClient.getTelClient() +
-                "' WHERE ID_CLIENT ='" + unClient.getIdClient() + "'";
+        cmd.CommandText = "UPDATE HOTEL SET NOM_HOTEL = '" + unHotel.getNomHotel() + "', ADRESSE_HOTEL='" +
+                unHotel.getAdresseHotel() + "',NB_CHAMBRE_HOTEL ='" + unHotel.getNbChambreHotel() + 
+                "' WHERE ID_HOTEL ='" + unHotel.getIdHotel() + "'";
 
         // on exécute la requête
         nbEnregAjout = cmd.ExecuteNonQuery();
