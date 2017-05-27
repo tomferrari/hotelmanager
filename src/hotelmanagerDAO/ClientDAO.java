@@ -4,12 +4,14 @@
  * and open the template in the editor.
  */
 package hotelmanagerDAO;
-import  hotelmanagerBO.Client;
+
+import hotelmanagerBO.Client;
 import hotelmanagerBLL.ClientManager;
-import java.*;
-import java.math.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,106 +19,122 @@ import java.sql.*;
  */
 public class ClientDAO {
     
-    private static ClientDAO unClientDAO;
-
-    public static ClientDAO GetunClientDAO()
+    Connection conn;
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    
+    public ClientDAO()
     {
-        if (unClientDAO == null)
-        {
-            unClientDAO = new ClientDAO();
-        }
-        return unClientDAO;
-    }
-
-    public static List<Client> GetClient()
-    {
-        int idClient;
-        String nomClient;
-        String prenomClient;
-        String emailClient;
-        int telClient;
-
-        Client unClient;
-
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
-
-        List<Client> lesClients = new List<Client>();
-
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = maConnexion;
-        cmd.CommandText = "SELECT * FROM CLIENT";
-
-        SqlDataReader monReader = cmd.ExecuteReader();
-
-        while (monReader.Read())
-        {
-            idClient = Convert.ToInt32(monReader["ID_CLIENT"].ToString());
-            nomClient = monReader["NOM_CLIENT"].ToString();
-            prenomClient = Convert.ToInt32(monReader["PRENOM_CLIENT"].ToString());
-            emailClient = monReader["EMAIL_CLIENT"].ToString();
-            telClient = Convert.ToInt32(monReader["TEL_CLIENT"].ToString());
-
-
-            //proprietaire = new PROPRIETAIRE(Convert.ToInt32(proprietaire.ID), proprietaire.NOM);
-            //entraineur = new ENTRAINEUR(Convert.ToInt32(entraineur.ID), entraineur.NOM);
-            unClient = new Client(Convert.ToInt32(idClient), nomClient, prenomClient, emailClient, Convert.ToInt32(telClient));
-            lesClients.add(unClient);
-        }
-        maConnexion.Close();
-
-        return lesClients;
-    }
-
-    public static int EnregistrerClient(Client unClient)
-    {
-        int nbEnr;
-
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
-
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = maConnexion;
-        cmd.CommandText = "INSERT INTO CLIENT VALUES ('" + unClient.getNomClient() + "','" + unClient.getPrenomClient() + "','" + unClient.getEmailClient() + "','" + unClient.getTelClient() + "')";
-
-        nbEnr = cmd.ExecuteNonQuery();
-        maConnexion.Close();
-        return nbEnr;
-    }
-
-    public int SupprimerClient(Client unClient)
-    {
-        int nbEnregSup;
-        // on récupère l'objet responsable de la connexion à la base
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
-
-        // on crée l'objet qui va contenir la requête SQL qui sera exécutée
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = maConnexion;
-        cmd.CommandText = "DELETE FROM CLIENT WHERE ID_CLIENT =" + unClient.getIdClient();
-
-        // on exécute la requête
-        nbEnregSup = cmd.ExecuteNonQuery();
-        // on retourne le nombre d'enregistrements ajoutés
-        return nbEnregSup;
-    }
-
-    public int ModifierClient(Client unClient)
-    {
-        int nbEnregAjout;
-        // on récupère l'objet responsable de la connexion à la base
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
-
-        // on crée l'objet qui va contenir la requête SQL qui sera exécutée
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = maConnexion;
-
-        cmd.CommandText = "UPDATE CLIENT SET NOM_CLIENT = '" + unClient.getNomClient() + "', PRENOM_CLIENT='" +
-                unClient.getPrenomClient() + "',EMAIL_CLIENT ='" + unClient.getEmailClient() + "',TEL_CLIENT='" + unClient.getTelClient() +
-                "' WHERE ID_CLIENT ='" + unClient.getIdClient() + "'";
-
-        // on exécute la requête
-        nbEnregAjout = cmd.ExecuteNonQuery();
-        // on retourne le nombre d'enregistrements ajoutés
-        return nbEnregAjout;
+        conn = AccesBD.connectTODB();
     }
     
+    public void insertCustomer(Client client)  {
+        try {
+            String insertQuery = "insert into Client"
+                    + "('" + "nomClient" + "'," + "'" + "prenomClient" + "','" + "emailClient" + "','" + "telClient" + "')"
+                    + " values('"
+                    + client.getNomClient()
+                    + "','" + client.getPrenomClient() + "'"
+                    + ",'" + client.getEmailClient() + "'"
+                    + ",'" + client.getTelClient() + "'"
+                    + ")";
+
+            //System.out.println(">>>>>>>>>> "+ insertQuery);
+            statement = conn.prepareStatement(insertQuery);
+
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Nouveau client ajouté");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+        finally
+        {
+            flushStatementOnly();
+        }  
+    }
+    
+    public void updateCustomer(Client client) {
+        try {
+            String updateQuery = "update Client set nomClient = '"
+                    + client.getNomClient() + "',"
+                    + "prenomClient = '" + client.getPrenomClient() + "',"
+                    + "emailClient = '" + client.getEmailClient() + "',"
+                    + "telClient = '" + client.getTelClient() + "' where idClient= "
+                    + client.getIdClient();
+
+            //System.out.println(">>>>>>>>>> "+ insertQuery);
+            //System.out.println(updateQuery);
+            statement = conn.prepareStatement(updateQuery);
+
+            //System.out.println(updateQuery);
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Client mit à jour");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+        
+        finally
+        {
+            flushStatementOnly();
+        }
+
+    }
+    
+    public void deleteCustomer(int idClient) throws SQLException {
+        try {
+            String deleteQuery = "delete from Client where idClient=" + idClient;
+            statement = conn.prepareStatement(deleteQuery);
+            statement.execute();
+            JOptionPane.showMessageDialog(null, "Client supprimé");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+        finally
+        {
+            flushStatementOnly();
+        }
+
+    }
+    
+    public ResultSet getAllCustomer() {
+        try {
+            String query = "select * from Client";
+            statement = conn.prepareStatement(query);
+            result = statement.executeQuery();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n Erreur");
+        }
+        
+
+        return result;
+    }
+    
+    private void flushStatementOnly()
+    {
+        {
+            try
+            {
+                statement.close();
+                //conn.close();
+            }
+            catch(SQLException ex)
+            {System.err.print(ex.toString()+" >> CLOSING DB");}
+        }
+    }
+    
+    public void flushAll()
+    {
+        {
+            try
+            {
+                statement.close();
+                result.close();
+            }
+            catch(SQLException ex)
+            {System.err.print(ex.toString()+" >> CLOSING DB");}
+        }
+    }
 }

@@ -4,12 +4,14 @@
  * and open the template in the editor.
  */
 package hotelmanagerDAO;
+
 import  hotelmanagerBO.Hotel;
 import hotelmanagerBLL.HotelManager;
-import java.*;
-import java.math.*;
-import java.util.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -17,104 +19,123 @@ import java.sql.*;
  */
 public class HotelDAO {
     
-    private static HotelDAO unHotelDAO;
-
-    public static HotelDAO GetunHotelDAO()
+    Connection conn;
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    
+    public HotelDAO()
     {
-        if (unHotelDAO == null)
-        {
-            unHotelDAO = new HotelDAO();
+        conn = AccesBD.connectTODB();
+    }
+    
+    public void insertCustomer(Hotel hotel)  {
+        try {
+            String insertQuery = "insert into Client"
+                    + "('" + "nomClient" + "'," + "'" + "prenomClient" + "','" + "emailClient" + "','" + "telClient" + "')"
+                    + " values('"
+                    + client.getNomClient()
+                    + "','" + client.getPrenomClient() + "'"
+                    + ",'" + client.getEmailClient() + "'"
+                    + ",'" + client.getTelClient() + "'"
+                    + ")";
+
+            //System.out.println(">>>>>>>>>> "+ insertQuery);
+            statement = conn.prepareStatement(insertQuery);
+
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Nouveau client ajouté");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
         }
-        return unHotelDAO;
-    }
-
-    public static List<Hotel> GetHotel()
-    {
-        int idHotel;
-        String nomHotel;
-        String adresseHotel;
-        int nbChambreHotel;
-
-        Hotel unHotel;
-
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
-
-        List<Hotel> lesHotels = new List<Hotel>();
-
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = maConnexion;
-        cmd.CommandText = "SELECT * FROM HOTEL";
-
-        SqlDataReader monReader = cmd.ExecuteReader();
-
-        while (monReader.Read())
+        finally
         {
-            idHotel = Convert.ToInt32(monReader["ID_HOTEL"].ToString());
-            nomHotel = monReader["NOM_HOTEL"].ToString();
-            adresseHotel = Convert.ToInt32(monReader["ADRESSE_HOTEL"].ToString());
-            nbChambreHotel = Convert.ToInt32(monReader["NB_CHAMBRE_HOTEL"].ToString());
+            flushStatementOnly();
+        }  
+    }
+    
+    public void updateCustomer(Client client) {
+        try {
+            String updateQuery = "update Client set nomClient = '"
+                    + client.getNomClient() + "',"
+                    + "prenomClient = '" + client.getPrenomClient() + "',"
+                    + "emailClient = '" + client.getEmailClient() + "',"
+                    + "telClient = '" + client.getTelClient() + "' where idClient= "
+                    + client.getIdClient();
 
+            //System.out.println(">>>>>>>>>> "+ insertQuery);
+            //System.out.println(updateQuery);
+            statement = conn.prepareStatement(updateQuery);
 
-            //proprietaire = new PROPRIETAIRE(Convert.ToInt32(proprietaire.ID), proprietaire.NOM);
-            //entraineur = new ENTRAINEUR(Convert.ToInt32(entraineur.ID), entraineur.NOM);
-            unHotel = new Hotel(Convert.ToInt32(idHotel), nomHotel, adresseHotel, Convert.ToInt32(nbChambreHotel));
-            lesHotels.add(unHotel);
+            //System.out.println(updateQuery);
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Client mit à jour");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
         }
-        maConnexion.Close();
+        
+        finally
+        {
+            flushStatementOnly();
+        }
 
-        return lesHotels;
     }
+    
+    public void deleteCustomer(int idClient) throws SQLException {
+        try {
+            String deleteQuery = "delete from Client where idClient=" + idClient;
+            statement = conn.prepareStatement(deleteQuery);
+            statement.execute();
+            JOptionPane.showMessageDialog(null, "Client supprimé");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+        finally
+        {
+            flushStatementOnly();
+        }
 
-    public static int EnregistrerHotel(Hotel unHotel)
-    {
-        int nbEnr;
-
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
-
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = maConnexion;
-        cmd.CommandText = "INSERT INTO HOTEL VALUES ('" + unHotel.getNomHotel()+ "','" + unHotel.getAdresseHotel()+ "','" + unHotel.getNbChambreHotel() + "')";
-
-        nbEnr = cmd.ExecuteNonQuery();
-        maConnexion.Close();
-        return nbEnr;
     }
+    
+    public ResultSet getAllCustomer() {
+        try {
+            String query = "select * from Client";
+            statement = conn.prepareStatement(query);
+            result = statement.executeQuery();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n Erreur");
+        }
+        
 
-    public int SupprimerHotel(Hotel unHotel)
-    {
-        int nbEnregSup;
-        // on récupère l'objet responsable de la connexion à la base
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
-
-        // on crée l'objet qui va contenir la requête SQL qui sera exécutée
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = maConnexion;
-        cmd.CommandText = "DELETE FROM HOTEL WHERE ID_HOTEL =" + unHotel.getIdHotel();
-
-        // on exécute la requête
-        nbEnregSup = cmd.ExecuteNonQuery();
-        // on retourne le nombre d'enregistrements ajoutés
-        return nbEnregSup;
+        return result;
     }
-
-    public int ModifierHotel(Hotel unHotel)
+    
+    private void flushStatementOnly()
     {
-        int nbEnregAjout;
-        // on récupère l'objet responsable de la connexion à la base
-        SqlConnection maConnexion = AccesBD.GetConnexionBD().GetSqlConnexion();
-
-        // on crée l'objet qui va contenir la requête SQL qui sera exécutée
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = maConnexion;
-
-        cmd.CommandText = "UPDATE HOTEL SET NOM_HOTEL = '" + unHotel.getNomHotel() + "', ADRESSE_HOTEL='" +
-                unHotel.getAdresseHotel() + "',NB_CHAMBRE_HOTEL ='" + unHotel.getNbChambreHotel() + 
-                "' WHERE ID_HOTEL ='" + unHotel.getIdHotel() + "'";
-
-        // on exécute la requête
-        nbEnregAjout = cmd.ExecuteNonQuery();
-        // on retourne le nombre d'enregistrements ajoutés
-        return nbEnregAjout;
+        {
+            try
+            {
+                statement.close();
+                //conn.close();
+            }
+            catch(SQLException ex)
+            {System.err.print(ex.toString()+" >> CLOSING DB");}
+        }
+    }
+    
+    public void flushAll()
+    {
+        {
+            try
+            {
+                statement.close();
+                result.close();
+            }
+            catch(SQLException ex)
+            {System.err.print(ex.toString()+" >> CLOSING DB");}
+        }
     }
     
 }
