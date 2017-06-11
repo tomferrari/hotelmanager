@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotelmanagerBO;
 
 /**
@@ -11,71 +6,37 @@ package hotelmanagerBO;
  */
 public class Hotel {
     
-    private int idHotel;
-    private String nomHotel;
-    private String adresseHotel;
-    private int nbChambreHotel;
+    private int hotel_id;
+    private String hotel_adresse;
+    private String hotel_nb_lit;
     
-    //Constructeur
-    public Hotel (int idHotel, String nomHotel, String adresseHotel, int nbChambreHotel)
-    {
-        this.idHotel = idHotel;
-        this.nomHotel = nomHotel;
-        this.adresseHotel = adresseHotel;
-        this.nbChambreHotel = nbChambreHotel;
+
+    public int getHotel_id() {
+        return hotel_id;
+    }
+
+    public void setHotel_id(int hotel_id) {
+        this.hotel_id = hotel_id;
     }
     
-    public Hotel (String nomHotel, String adresseHotel, int nbChambreHotel)
+    public String getHotel_adresse()
     {
-        this.nomHotel = nomHotel;
-        this.adresseHotel = adresseHotel;
-        this.nbChambreHotel = nbChambreHotel;
+        return hotel_adresse;
     }
     
-    public Hotel (int idHotel)
+    public void setHotel_adresse(String hotel_adresse)
     {
-        this.idHotel = idHotel;
+        this.hotel_adresse = hotel_adresse;
     }
     
-    //Getters
-    public int getIdHotel()
+    public String getHotel_nb_lit()
     {
-        return idHotel;
+        return hotel_nb_lit;
     }
     
-    public String getNomHotel()
+    public void setHotel_nb_lit (String hotel_nb_lit)
     {
-        return nomHotel;
+        this.hotel_nb_lit = hotel_nb_lit;
     }
     
-    public String getAdresseHotel()
-    {
-        return adresseHotel;
-    }
-    
-    public int getNbChambreHotel()
-    {
-        return nbChambreHotel;
-    }
-    
-    //Setters
-    public void setIdHotel(int idHotel)
-    {
-      this.idHotel = idHotel;
-    }
-    
-    public void setNomHotel(String nomHotel)
-    {
-      this.nomHotel = nomHotel;
-    }
-    
-    public void setAdresseHotel(String adresseHotel)
-    {
-      this.adresseHotel = adresseHotel;
-    }
-    
-    public void setNbChambreHotel(int nbChambreHotel)
-    {
-      this.nbChambreHotel = nbChambreHotel;
-    }
 }

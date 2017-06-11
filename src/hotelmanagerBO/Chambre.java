@@ -1,95 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotelmanagerBO;
 
-/**
- *
- * @author Thomas
- */
 public class Chambre {
+    private int room_id;
+    private String room_no;
+    private int bed_number;
     
-    private int idChambre;
-    private int etageChambre;
-    private int numeroChambre;
-    private int nbLitChambre;
-    private int prixChambre;
     
-    //Constructeur
-    public Chambre (int idChambre, int etageChambre, int numeroChambre,int nbLitChambre,int prixChambre)
+    private ChambreType room_class;
+    
+    
+    public Chambre(String roomNo)
     {
-        this.idChambre = idChambre;
-        this.etageChambre = etageChambre;
-        this.numeroChambre = numeroChambre;
-        this.nbLitChambre = nbLitChambre;
-        this.prixChambre = prixChambre;
+        room_no = roomNo;
     }
-    
-    public Chambre (int etageChambre, int numeroChambre,int nbLitChambre,int prixChambre)
-    {
-        this.etageChambre = etageChambre;
-        this.numeroChambre = numeroChambre;
-        this.nbLitChambre = nbLitChambre;
-        this.prixChambre = prixChambre;
+
+    public int getRoom_id() {
+        return room_id;
     }
-    
-    public Chambre (int idChambre)
-    {
-        this.idChambre = idChambre;
+
+    public void setRoom_id(int room_id) {
+        this.room_id = room_id;
     }
-    
-    //Getters
-    public int getIdChambre()
-    {
-        return idChambre;
+
+    public String getRoom_no() {
+        return room_no;
     }
-    
-    public int getEtageChambre()
-    {
-        return etageChambre;
+
+    public void setRoom_no(String room_no) {
+        this.room_no = room_no;
     }
-    
-    public int getNumeroChambre()
-    {
-        return numeroChambre;
+
+    public int getBed_number() {
+        return bed_number;
     }
-    
-    public int getNbLitChambre()
-    {
-        return nbLitChambre;
+
+    public void setBed_number(int bed_number) {
+        this.bed_number = bed_number;
     }
-    
-    public int getPrixChambre()
-    {
-        return prixChambre;
+
+
+    public ChambreType getRoom_class() {
+        return room_class;
     }
-    
-    //Setters
-    public void setIdChambre(int idChambre)
-    {
-      this.idChambre = idChambre;
-    }
-    
-    public void setEtageChambre(int etageChambre)
-    {
-      this.etageChambre = etageChambre;
-    }
-    
-    public void setNumeroChambre(int numeroChambre)
-    {
-      this.numeroChambre = numeroChambre;
-    }
-    
-    public void setNbLitChambre(int nbLitChambre)
-    {
-      this.nbLitChambre = nbLitChambre;
-    }
-    
-    public void setPrixChambre(int prixChambre)
-    {
-      this.prixChambre = prixChambre;
+
+    public void setRoom_class(ChambreType room_class) {
+        this.room_class = room_class;
     }
     
 }

@@ -1,139 +1,210 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotelmanagerDAO;
-import  hotelmanagerBO.Chambre;
-import hotelmanagerDAO.ChambreDAO;
+
+import hotelmanagerBO.Chambre;
+import hotelmanagerBO.ChambreType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Thomas
- */
 public class ChambreDAO {
     
-    Connection conn;
+    Connection conn = DataBaseConnection.connectTODB();
     PreparedStatement statement = null;
     ResultSet result = null;
-    
-    public ChambreDAO()
-    {
-        conn = AccesBD.connectTODB();
-    }
-    
-    public void insertCustomer(Chambre chambre)  {
+
+     public void insertRoom(Chambre room) {
         try {
-            String insertQuery = "insert into Chambre"
-                    + "('" + "etageChambre" + "'," + "'" + "numeroChambre" + "','" + "nbLitChambre" + "','" + "prixChambre" + "')"
+            String insertQuery = "insert into room('room_no','bed_number','room_class')"
                     + " values('"
-                    + chambre.getEtageChambre()
-                    + "','" + chambre.getNumeroChambre() + "'"
-                    + ",'" + chambre.getNbLitChambre() + "'"
-                    + ",'" + chambre.getPrixChambre() + "'"
+                    + room.getRoom_no()
+                    + "'," + room.getBed_number() + ""
+                    + ",'" + room.getRoom_class().getRoom_type() + "'"
                     + ")";
 
-            //System.out.println(">>>>>>>>>> "+ insertQuery);
+            System.out.println(">>>>>>>>>> "+ room.getRoom_class().getRoom_type());
             statement = conn.prepareStatement(insertQuery);
 
             statement.execute();
 
-            JOptionPane.showMessageDialog(null, "Nouvelle chambre ajouté");
+            JOptionPane.showMessageDialog(null, "Chambre ajouté ");
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
         }
         finally
         {
-            flushStatementOnly();
-        }  
+            flushStatmentOnly();
+        }
     }
-    
-    public void updateCustomer(Chambre chambre) {
+
+    public ResultSet getRooms() {
         try {
-            String updateQuery = "update Chambre set etageChambre = '"
-                    + chambre.getEtageChambre() + "',"
-                    + "numeroChambre = '" + chambre.getNumeroChambre() + "',"
-                    + "nbLitChambre = '" + chambre.getNbLitChambre() + "',"
-                    + "prixChambre = '" + chambre.getPrixChambre() + "' where idChambre= "
-                    + chambre.getIdChambre();
-
-            //System.out.println(">>>>>>>>>> "+ insertQuery);
-            //System.out.println(updateQuery);
-            statement = conn.prepareStatement(updateQuery);
-
-            //System.out.println(updateQuery);
-            statement.execute();
-
-            JOptionPane.showMessageDialog(null, "Chambre mise à jour");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
-        }
-        
-        finally
-        {
-            flushStatementOnly();
-        }
-
-    }
-    
-    public void deleteCustomer(int idChambre) throws SQLException {
-        try {
-            String deleteQuery = "delete from Chambre where idChambre=" + idChambre;
-            statement = conn.prepareStatement(deleteQuery);
-            statement.execute();
-            JOptionPane.showMessageDialog(null, "Chambre supprimée");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
-        }
-        finally
-        {
-            flushStatementOnly();
-        }
-
-    }
-    
-    public ResultSet getAllCustomer() {
-        try {
-            String query = "select * from Chambre";
+            String query = "select * from room";
             statement = conn.prepareStatement(query);
             result = statement.executeQuery();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString() + "\n Erreur");
         }
         
-
         return result;
     }
     
-    private void flushStatementOnly()
+    public int getNoOfRooms()
     {
-        {
-            try
+        int rooms = -1;
+        try {
+            String query = "select count(room_no)  as noRoom from room";
+            statement = conn.prepareStatement(query);
+            result = statement.executeQuery();
+            while(result.next())
             {
-                statement.close();
-                //conn.close();
+                rooms = result.getInt("noRoom");
             }
-            catch(SQLException ex)
-            {System.err.print(ex.toString()+" >> CLOSING DB");}
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n erreur");
+        }
+        
+        return rooms;
+    }
+    
+    public ResultSet getAllRoomNames()
+    {
+         try {
+            String query = "select room_no from room";
+            statement = conn.prepareStatement(query);
+            result = statement.executeQuery();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n Erreur");
+        }
+        
+        return result;
+    }
+
+    public void deleteRoom(int roomId) {
+
+        try {
+            String deleteQuery = "delete from room where room_id=" + roomId;
+            statement = conn.prepareStatement(deleteQuery);
+            statement.execute();
+            JOptionPane.showMessageDialog(null, "Chambre supprimé");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+        finally
+        {
+            flushStatmentOnly();
+        }
+    }
+    
+    public void updateRoom(Chambre room)
+    {
+         try {
+            String updateQuery ="update room set room_no = '"
+                    +room.getRoom_no()+"', bed_number="
+                    +room.getBed_number()+"', room_class= '"
+                    +room.getRoom_class().getRoom_type()+"'";
+                    
+
+            System.out.println(">>>>>>>>>> "+ updateQuery);
+            //System.out.println(updateQuery);
+            statement = conn.prepareStatement(updateQuery);
+
+            //System.out.println(updateQuery);
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Chambre modifié");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+         finally
+         {
+             flushStatmentOnly();
+         }
+
+    }
+
+    public String boolToString(boolean value) {
+        return value ? "true" : "false";
+    }
+    
+    public void insertRoomType(ChambreType roomType) {
+        try {
+            String insertRoomTypeQuery = "insert into roomType values('" + roomType.getRoom_type() + "'," + roomType.getPricePerDay() + ")";
+
+            System.out.println(">>>>>>>>>> " + insertRoomTypeQuery);
+
+            statement = conn.prepareStatement(insertRoomTypeQuery);
+
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Type de chambre ajouté");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+        finally
+        {
+            flushStatmentOnly();
+        }
+    }
+
+    public ResultSet getRoomType() {
+        try {
+            String query = "select * from roomType";
+            statement = conn.prepareStatement(query);
+            result = statement.executeQuery();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n Erreur");
+        }
+
+        return result;
+    }
+
+    public void updateRoomType(ChambreType roomType) {
+        try {
+            String updateRoomTypeQuery = "update roomType set price= " + roomType.getPricePerDay() + " where type='" + roomType.getRoom_type() + "'";
+
+            //System.out.println(">>>>>>>>>> "+ updateRoomTypeQuery);
+            statement = conn.prepareStatement(updateRoomTypeQuery);
+
+            statement.execute();
+
+            JOptionPane.showMessageDialog(null, "Type de chambre modifié");
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+        finally
+        {
+            flushStatmentOnly();
         }
     }
     
     public void flushAll()
     {
         {
-            try
-            {
-                statement.close();
-                result.close();
-            }
-            catch(SQLException ex)
-            {System.err.print(ex.toString()+" >> CLOSING DB");}
-        }
+                        try
+                        {
+                            statement.close();
+                            result.close();
+                        }
+                        catch(SQLException ex)
+                        {System.err.print(ex.toString()+" >> CLOSING DB");}
+                    }
     }
+    
+    private void flushStatmentOnly()
+    {
+        {
+                        try
+                        {
+                            statement.close();
+                        }
+                        catch(SQLException ex)
+                        {System.err.print(ex.toString()+" >> CLOSING DB");}
+                    }
+    }
+
 }

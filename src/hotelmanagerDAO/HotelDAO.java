@@ -5,8 +5,7 @@
  */
 package hotelmanagerDAO;
 
-import  hotelmanagerBO.Hotel;
-import hotelmanagerBLL.HotelManager;
+import hotelmanagerBO.Hotel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,44 +24,69 @@ public class HotelDAO {
     
     public HotelDAO()
     {
-        conn = AccesBD.connectTODB();
+        conn = DataBaseConnection.connectTODB();
     }
-    
-    public void insertCustomer(Hotel hotel)  {
+
+     public void insertHotel(Hotel hotel) {
         try {
-            String insertQuery = "insert into Client"
-                    + "('" + "nomClient" + "'," + "'" + "prenomClient" + "','" + "emailClient" + "','" + "telClient" + "')"
+            String insertQuery = "insert into hotels"
+                    + "('" + "hotel_adresse" + "'," + "'" + "hotel_nb_lit" + "')"
                     + " values('"
-                    + client.getNomClient()
-                    + "','" + client.getPrenomClient() + "'"
-                    + ",'" + client.getEmailClient() + "'"
-                    + ",'" + client.getTelClient() + "'"
+                    + hotel.getHotel_adresse()
+                    + ",'" + hotel.getHotel_nb_lit() + "'"
                     + ")";
 
-            //System.out.println(">>>>>>>>>> "+ insertQuery);
             statement = conn.prepareStatement(insertQuery);
 
             statement.execute();
 
-            JOptionPane.showMessageDialog(null, "Nouveau client ajouté");
+            JOptionPane.showMessageDialog(null, "Hotel ajouté avec succées ");
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
         }
         finally
         {
-            flushStatementOnly();
-        }  
+            flushStatmentOnly();
+        }
+    }
+
+    public ResultSet getHotels() {
+        try {
+            String query = "select * from hotel";
+            statement = conn.prepareStatement(query);
+            result = statement.executeQuery();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n Erreur");
+        }
+        
+        return result;
     }
     
-    public void updateCustomer(Client client) {
+
+    public void deleteHotel(int hotelId) {
+
         try {
-            String updateQuery = "update Client set nomClient = '"
-                    + client.getNomClient() + "',"
-                    + "prenomClient = '" + client.getPrenomClient() + "',"
-                    + "emailClient = '" + client.getEmailClient() + "',"
-                    + "telClient = '" + client.getTelClient() + "' where idClient= "
-                    + client.getIdClient();
+            String deleteQuery = "delete from hotel where hotel_id=" + hotelId;
+            statement = conn.prepareStatement(deleteQuery);
+            statement.execute();
+            JOptionPane.showMessageDialog(null, "Hotel supprimé");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
+        }
+        finally
+        {
+            flushStatmentOnly();
+        }
+    }
+    
+    public void updateHotel(Hotel hotel) 
+    {
+        try {
+            String updateQuery = "update hotel set hotel_adresse = '"
+                    + hotel.getHotel_adresse() + "',"
+                    + "hotel_nb_lit = '" + hotel.getHotel_nb_lit() + "' where hotel_id= "
+                    + hotel.getHotel_id();
 
             //System.out.println(">>>>>>>>>> "+ insertQuery);
             //System.out.println(updateQuery);
@@ -71,71 +95,42 @@ public class HotelDAO {
             //System.out.println(updateQuery);
             statement.execute();
 
-            JOptionPane.showMessageDialog(null, "Client mit à jour");
+            JOptionPane.showMessageDialog(null, "Hotel modifié");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
         }
         
         finally
         {
-            flushStatementOnly();
+            flushStatmentOnly();
         }
 
     }
-    
-    public void deleteCustomer(int idClient) throws SQLException {
-        try {
-            String deleteQuery = "delete from Client where idClient=" + idClient;
-            statement = conn.prepareStatement(deleteQuery);
-            statement.execute();
-            JOptionPane.showMessageDialog(null, "Client supprimé");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
-        }
-        finally
-        {
-            flushStatementOnly();
-        }
 
-    }
-    
-    public ResultSet getAllCustomer() {
-        try {
-            String query = "select * from Client";
-            statement = conn.prepareStatement(query);
-            result = statement.executeQuery();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString() + "\n Erreur");
-        }
-        
-
-        return result;
-    }
-    
-    private void flushStatementOnly()
-    {
-        {
-            try
-            {
-                statement.close();
-                //conn.close();
-            }
-            catch(SQLException ex)
-            {System.err.print(ex.toString()+" >> CLOSING DB");}
-        }
-    }
     
     public void flushAll()
     {
         {
-            try
-            {
-                statement.close();
-                result.close();
-            }
-            catch(SQLException ex)
-            {System.err.print(ex.toString()+" >> CLOSING DB");}
-        }
+                        try
+                        {
+                            statement.close();
+                            result.close();
+                        }
+                        catch(SQLException ex)
+                        {System.err.print(ex.toString()+" >> CLOSING DB");}
+                    }
+    }
+    
+    private void flushStatmentOnly()
+    {
+        {
+                        try
+                        {
+                            statement.close();
+                        }
+                        catch(SQLException ex)
+                        {System.err.print(ex.toString()+" >> CLOSING DB");}
+                    }
     }
     
 }

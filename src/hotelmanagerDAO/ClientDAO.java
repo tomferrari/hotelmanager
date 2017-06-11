@@ -1,22 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotelmanagerDAO;
 
 import hotelmanagerBO.Client;
-import hotelmanagerBLL.ClientManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Thomas
- */
 public class ClientDAO {
     
     Connection conn;
@@ -25,18 +15,17 @@ public class ClientDAO {
     
     public ClientDAO()
     {
-        conn = AccesBD.connectTODB();
+        conn = DataBaseConnection.connectTODB();
     }
-    
-    public void insertCustomer(Client client)  {
+      public void insertCustomer(Client user)  {
         try {
-            String insertQuery = "insert into Client"
-                    + "('" + "nomClient" + "'," + "'" + "prenomClient" + "','" + "emailClient" + "','" + "telClient" + "')"
+            String insertQuery = "insert into userInfo"
+                    + "('" + "name" + "'," + "'" + "surname" + "','" + "adress" + "','" + "phone" + "')"
                     + " values('"
-                    + client.getNomClient()
-                    + "','" + client.getPrenomClient() + "'"
-                    + ",'" + client.getEmailClient() + "'"
-                    + ",'" + client.getTelClient() + "'"
+                    + user.getName()
+                    + "','" + user.getSurname() + "'"
+                    + ",'" + user.getAddress() + "'"
+                    + ",'" + user.getPhone_no() + "'"
                     + ")";
 
             //System.out.println(">>>>>>>>>> "+ insertQuery);
@@ -44,7 +33,7 @@ public class ClientDAO {
 
             statement.execute();
 
-            JOptionPane.showMessageDialog(null, "Nouveau client ajouté");
+            JOptionPane.showMessageDialog(null, "Client ajouté");
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
@@ -52,17 +41,20 @@ public class ClientDAO {
         finally
         {
             flushStatementOnly();
-        }  
+        }
+        
+        
     }
     
-    public void updateCustomer(Client client) {
+    public void updateCustomer(Client user) {
+        
         try {
-            String updateQuery = "update Client set nomClient = '"
-                    + client.getNomClient() + "',"
-                    + "prenomClient = '" + client.getPrenomClient() + "',"
-                    + "emailClient = '" + client.getEmailClient() + "',"
-                    + "telClient = '" + client.getTelClient() + "' where idClient= "
-                    + client.getIdClient();
+            String updateQuery = "update userInfo set name = '"
+                    + user.getName() + "',"
+                    + "surname = '" + user.getSurname() + "',"
+                    + "adress = '" + user.getAddress() + "',"
+                    + "phone = '" + user.getPhone_no() + "' where user_id= "
+                    + user.getCustomer_id();
 
             //System.out.println(">>>>>>>>>> "+ insertQuery);
             //System.out.println(updateQuery);
@@ -71,7 +63,7 @@ public class ClientDAO {
             //System.out.println(updateQuery);
             statement.execute();
 
-            JOptionPane.showMessageDialog(null, "Client mit à jour");
+            JOptionPane.showMessageDialog(null, "Client modifié");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString() + "\n" + "Erreur");
         }
@@ -82,10 +74,10 @@ public class ClientDAO {
         }
 
     }
-    
-    public void deleteCustomer(int idClient) throws SQLException {
+
+    public void deleteCustomer(int userId) throws SQLException {
         try {
-            String deleteQuery = "delete from Client where idClient=" + idClient;
+            String deleteQuery = "delete from userInfo where user_id=" + userId;
             statement = conn.prepareStatement(deleteQuery);
             statement.execute();
             JOptionPane.showMessageDialog(null, "Client supprimé");
@@ -98,10 +90,10 @@ public class ClientDAO {
         }
 
     }
-    
+
     public ResultSet getAllCustomer() {
         try {
-            String query = "select * from Client";
+            String query = "select * from userInfo";
             statement = conn.prepareStatement(query);
             result = statement.executeQuery();
         } catch (SQLException ex) {
@@ -111,30 +103,31 @@ public class ClientDAO {
 
         return result;
     }
-    
-    private void flushStatementOnly()
+     private void flushStatementOnly()
     {
         {
-            try
-            {
-                statement.close();
-                //conn.close();
-            }
-            catch(SQLException ex)
-            {System.err.print(ex.toString()+" >> CLOSING DB");}
-        }
+                        try
+                        {
+                            statement.close();
+                            //conn.close();
+                        }
+                        catch(SQLException ex)
+                        {System.err.print(ex.toString()+" >> CLOSING DB");}
+                    }
     }
-    
-    public void flushAll()
+     public void flushAll()
     {
         {
-            try
-            {
-                statement.close();
-                result.close();
-            }
-            catch(SQLException ex)
-            {System.err.print(ex.toString()+" >> CLOSING DB");}
-        }
+                        try
+                        {
+                            statement.close();
+                            result.close();
+                        }
+                        catch(SQLException ex)
+                        {System.err.print(ex.toString()+" >> CLOSING DB");}
+                    }
     }
+
+    
+    
 }
